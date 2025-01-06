@@ -167,11 +167,13 @@ h1, h2, h3, h4, h5, h6, figure {
   background: #5cb85c;
 }
 
+/* Fixed Navigation Header */
 .fh5co-nav {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
-  background-color: rgba(59, 77, 42, 1); /* Background color with 80% opacity */
+  background-color: rgba(59, 77, 42, 1); /* Background color */
   z-index: 1000;
   padding: 10px 0;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
@@ -204,7 +206,7 @@ h1, h2, h3, h4, h5, h6, figure {
   list-style: none;
   padding: 10px;
   margin: 0;
-  display: flex; /* Ensures links are aligned in a row */
+  display: flex; /* Align links in a row */
   gap: 10px; /* Space between links */
 }
 
@@ -244,25 +246,27 @@ h1, h2, h3, h4, h5, h6, figure {
 /* Dropdown menu styling */
 .fh5co-nav ul li.has-dropdown .dropdown {
   width: 130px;
-  -webkit-box-shadow: 0px 14px 33px -9px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 0px 14px 33px -9px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 14px 33px -9px rgba(0, 0, 0, 0.75);
-  z-index: 1002;
-  visibility: hidden;
-  opacity: 0;
   position: absolute;
   top: 40px;
   left: 0;
-  text-align: left;
   background: #fff;
   padding: 20px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  -ms-border-radius: 4px;
   border-radius: 4px;
-  -webkit-transition: 0s;
-  -o-transition: 0s;
-  transition: 0s;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s;
+}
+
+/* Show dropdown when hovering over the parent */
+.fh5co-nav ul li.has-dropdown:hover .dropdown {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Content Adjustment (to prevent overlap with fixed navbar) */
+body {
+  padding-top: 80px; /* Add padding for the fixed navbar height */
 }
 
 /* Responsive design adjustments */
@@ -272,13 +276,13 @@ h1, h2, h3, h4, h5, h6, figure {
   }
 
   .fh5co-nav .container {
-    flex-direction: column; /* Stack the logo and menu vertically */
+    flex-direction: column; /* Stack logo and menu vertically */
   }
 
   .fh5co-nav ul {
-    display: none; /* Hide menu by default */
+    display: none; /* Hide menu by default on small screens */
     flex-direction: column; /* Stack menu items vertically */
-    align-items: center; /* Center align on smaller screens */
+    align-items: center; /* Center align menu items */
     gap: 10px;
     background-color: rgba(59, 77, 42, 0.9); /* Ensure menu matches navbar */
     position: absolute;
@@ -291,56 +295,34 @@ h1, h2, h3, h4, h5, h6, figure {
   }
 
   .fh5co-nav ul.show {
-    display: flex; /* Show menu when toggled */
+    display: flex; /* Show the menu when toggled */
   }
 
- /* Position the hamburger menu */
-.hamburger {
-  display: none; /* Hidden by default for larger screens */
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-  z-index: 1001;
-}
-
-.hamburger span {
-  display: block;
-  width: 25px;
-  height: 3px;
-  margin: 5px auto;
-  background-color: white;
-  transition: all 0.3s ease-in-out;
-}
-
-/* For smaller screens, show the hamburger menu */
-@media screen and (max-width: 768px) {
+  /* Show hamburger menu on small screens */
   .hamburger {
     display: block;
-  }
-
-  /* Hide the navigation menu by default */
-  .menu {
-    display: none;
-    flex-direction: column;
-    background-color: rgba(59, 77, 42, 0.9);
     position: absolute;
-    top: 60px; /* Adjust to align below the navbar */
-    right: 0;
-    width: 100%;
-    text-align: center;
-    z-index: 1000;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    z-index: 1001;
   }
 
-  .menu.active {
-    display: flex; /* Show menu when active */
+  .hamburger span {
+    width: 25px;
+    height: 3px;
+    background-color: white;
   }
 
+  /* Adjust the menu links for mobile */
   .menu li {
     padding: 10px 0; /* Add spacing between menu items */
   }
-}
 
+  /* Menu active state */
+  .menu.active {
+    display: flex; /* Show menu when active */
+  }
 }
 
 
