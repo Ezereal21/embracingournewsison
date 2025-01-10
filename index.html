@@ -130,15 +130,15 @@
 </div>
 
 <!-- Audio Player -->
-<audio id="audioPlayer" src="website_music.mp3">
+<audio id="audioPlayer" src="audio/website_music.mp3">
     Your browser does not support the audio element.
 </audio>
 
 <div class="video-container">
     <h3 class="video-title">When I told you that I love you,<br> 
-							Well, who would've guessed,<br>
-							That you'll end up loving me too,<br>
-							And we'll, you know the rest. </h3>
+						Well, who would've guessed,<br>
+						That you'll end up loving me too,<br>
+						And we'll, you know the rest. </h3>
     <video id="videoPlayer" controls width="1100">
         <source src="videos/prenupvid.mp4" type="video/mp4">
         Your browser does not support the video tag.
@@ -159,7 +159,8 @@ const playIcon = document.getElementById("playIcon");
 
 // Restore playback state on page load, but reset audio to start
 window.addEventListener("load", function () {
-    // Reset audio to the start
+    // Load audio to ensure it's ready
+    audioPlayer.load();
     audioPlayer.currentTime = 0;
 
     // Check if the audio was playing on the last visit
