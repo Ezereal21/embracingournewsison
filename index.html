@@ -129,10 +129,9 @@
     <p class="time" style="font-size: 1.5rem;">18. 01. 2025 | 2 PM</p>
 </div>
 
-<audio id="audioPlayer" src="https://github.com/Ezereal21/embracingournewsison/raw/refs/heads/main/audio/website_music.mp3">
+<audio id="audioPlayer" src="https://github.com/Ezereal21/embracingournewsison/raw/refs/heads/main/audio/website_music.MP3" autoplay>
     Your browser does not support the audio element.
 </audio>
-
 
 <div class="video-container">
     <h3 class="video-title">When I told you that I love you,<br> 
@@ -157,29 +156,35 @@ const audioPlayer = document.getElementById("audioPlayer");
 const videoPlayer = document.querySelector(".video-container video"); // Select video inside .video-container
 const playIcon = document.getElementById("playIcon");
 
-// Restore playback state on page load, but reset audio to start
+// Ensure audio resumes playback on page load
 window.addEventListener("load", function () {
-    // Load audio to ensure it's ready
-    audioPlayer.load();
-    audioPlayer.currentTime = 0;
+    audioPlayer.load(); // Ensure audio is ready to play
 
-    // Check if the audio was playing on the last visit
+    // Check if the audio was playing and restore the playback state
     const isPlaying = localStorage.getItem("isPlaying") === "true";
+    const audioTime = parseFloat(localStorage.getItem("audioTime")) || 0;
+
+    audioPlayer.currentTime = audioTime; // Restore playback position
 
     if (isPlaying) {
-        audioPlayer.play();
-        playIcon.src = "images/vinyl.gif"; // Update to vinyl gif when playing
+        audioPlayer.play().catch((error) => {
+            console.error("Autoplay blocked:", error);
+        });
+        playIcon.src = "images/vinyl.gif"; // Show vinyl playing icon
     }
 });
 
 // Toggle play/pause functionality for audio
 function togglePlayPause() {
     if (audioPlayer.paused) {
-        audioPlayer.play(); // Play the audio when clicked
-        playIcon.src = "images/vinyl.gif"; // Update to vinyl gif when playing
-        localStorage.setItem("isPlaying", true); // Save play state
+        audioPlayer.play().then(() => {
+            playIcon.src = "images/vinyl.gif"; // Update to vinyl gif when playing
+            localStorage.setItem("isPlaying", true); // Save play state
+        }).catch((error) => {
+            console.error("Error starting playback:", error);
+        });
     } else {
-        audioPlayer.pause(); // Pause the audio when clicked
+        audioPlayer.pause();
         playIcon.src = "images/vinyl.gif"; // Update to vinyl gif to indicate paused state
         localStorage.setItem("isPlaying", false); // Save pause state
     }
@@ -193,28 +198,32 @@ videoPlayer.addEventListener("play", function () {
     }
 });
 
-// Ensure audio is resumed if video is paused
+// Resume audio if video is paused
 videoPlayer.addEventListener("pause", function () {
     if (audioPlayer.paused) {
-        audioPlayer.play(); // Resume audio when video is paused
-        playIcon.src = "images/vinyl.gif"; // Update icon to indicate playing state
+        audioPlayer.play().then(() => {
+            playIcon.src = "images/vinyl.gif"; // Update icon to indicate playing state
+        }).catch((error) => {
+            console.error("Error resuming audio:", error);
+        });
     }
 });
 
-// Save the current playback time periodically and when the page unloads
+// Save playback state periodically and on page unload
 setInterval(() => {
     localStorage.setItem("audioTime", audioPlayer.currentTime);
-}, 1000); // Every second
+}, 1000);
 
 window.addEventListener("beforeunload", function () {
     localStorage.setItem("audioTime", audioPlayer.currentTime);
     localStorage.setItem("isPlaying", !audioPlayer.paused);
 });
 
-// Ensure video and audio playback completes correctly
-videoPlayer.addEventListener('ended', function () {
-    // When the video ends, continue playing the audio
-    audioPlayer.play();
+// Ensure audio restarts when video ends
+videoPlayer.addEventListener("ended", function () {
+    audioPlayer.play().catch((error) => {
+        console.error("Error resuming audio after video:", error);
+    });
 });
 </script>
 
